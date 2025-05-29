@@ -59,13 +59,8 @@ fun PagerGrid(
     Layout(
         modifier = modifier
         .horizontalScroll(
-            state = state,
-            flingBehavior = remember { PagerGridFlingBehaviour(state, visibleWidth) }
+            state = state
         ),
-//            .scrollable(
-//            state = rememberScrollState(),
-//            orientation = Orientation.Horizontal
-//        ),
         content = content,
     ) { measurables, constraints ->
         val distanceBetweenColumnsPx = distanceBetweenColumns.roundToPx()
@@ -130,27 +125,6 @@ fun PagerGrid(
     }
 }
 
-private class PagerGridScrollState(
-    private val value: ScrollState
-) {
-
-}
-
-private class PagerGridFlingBehaviour(
-    private val scrollState: ScrollState,
-    private val pageWidth: Int
-): FlingBehavior {
-    override suspend fun ScrollScope.performFling(initialVelocity: Float): Float {
-        val scope: ScrollScope = this
-        return if (abs(initialVelocity) >= 0f) {
-            //var distanceToScroll = 0f
-            Log.d("PagerGridFlingBehaviour", "initialVelocity = $initialVelocity; pageWidth: $pageWidth")
-            scrollBy(pageWidth.toFloat() - scrollState.value)// + 400f
-            initialVelocity
-        } else initialVelocity
-    }
-}
-
 @Preview(showBackground = true)
 @Composable
 fun SquareGridPreview() {
@@ -164,8 +138,6 @@ fun SquareGridPreview() {
                     Log.d("SquareGridPreview", "Box Constraints: ${it.size}")
                     visibleWidth = it.size.width
                 }) {
-            Log.d("SquareGridPreview", "visibleWidth $visibleWidth")
-//            Box(modifier = Modifier.fillMaxHeight().width(10.dp).background(Color.White))
             PagerGrid(
                 modifier = Modifier
                     .fillMaxSize(),
